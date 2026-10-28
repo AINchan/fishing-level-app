@@ -1,3 +1,5 @@
+INSERT INTO users (display_name) VALUES ('自分の表示名');
+
 INSERT INTO ranks (rank, base_xp) VALUES
     (1, 10),
     (2, 15),
