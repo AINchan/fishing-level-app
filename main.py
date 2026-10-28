@@ -24,22 +24,22 @@ def health():
 def get_methods():
     with get_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute("SELECT id, name, multiplier FROM methods")
+            cur.execute("SELECT id, name, default_multiplier, fishing_area FROM methods")
             rows = cur.fetchall()
 
     methods = []
     for row in rows:
-        methods.append({"id": row[0], "name": row[1], "multiplier": float(row[2])})
+        methods.append({"id": row[0], "name": row[1], "default_multiplier": float(row[2]), "fishing_area": row[3]})
     return methods
 
 @app.get("/species")
 def get_species(min_rank: int = 1):
     with get_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute("SELECT id, name, rank FROM species WHERE rank >= %s",(min_rank,))
+            cur.execute("SELECT id, name, measure_type, rank FROM species WHERE rank >= %s",(min_rank,))
             rows = cur.fetchall()
 
     species = []
     for row in rows:
-        species.append({"id": row[0], "name": row[1], "rank": row[2]})
+        species.append({"id": row[0], "name": row[1], "measure_type": row[2], "rank": row[3]})
     return species
