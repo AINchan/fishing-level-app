@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from typing import Literal
 from pydantic import BaseModel
+from fastapi import FastAPI, HTTPException
 
 load_dotenv()
 
@@ -78,6 +79,12 @@ class CatchCreate(BaseModel):
 def create_catches(trip_id: int, catch: CatchCreate):
     with get_connection() as conn:
         with conn.cursor() as cur:
+            
+            cur.execute("SELECT id FROM trips WHERE id = %s", (trip_id,))
+            trip = cur.fetchone()
+            if trip is None:
+                raise HTTPException(status_code=404, detail="釣行が見つかりません")
+
             cur.execute(
                 "INSERT INTO catches (trip_id, species_id, method_id, length_cm, weight_g, finger_count)"
                 "VALUES (%s,%s,%s,%s,%s,%s) RETURNING id",
