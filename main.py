@@ -76,13 +76,13 @@ def create_trip(trip: TripCreate):
 class CatchCreate(BaseModel):
     species_id: int
     method_id: int    
-    length: float | None = None
-    weight: int | None = None
-    finger: float | None = None
+    length_cm: float | None = None
+    weight_g: int | None = None
+    finger_count: float | None = None
     
 
 @app.post("/trips/{trip_id}/catches")
-def create_catches(trip_id: int, catch: CatchCreate):
+def create_catch(trip_id: int, catch: CatchCreate):
     with get_connection() as conn:
         with conn.cursor() as cur:
             
@@ -94,7 +94,7 @@ def create_catches(trip_id: int, catch: CatchCreate):
             cur.execute(
                 "INSERT INTO catches (trip_id, species_id, method_id, length_cm, weight_g, finger_count)"
                 "VALUES (%s,%s,%s,%s,%s,%s) RETURNING id",
-                (trip_id, catch.species_id, catch.method_id, catch.length, catch.weight, catch.finger),
+                (trip_id, catch.species_id, catch.method_id, catch.length_cm, catch.weight_g, catch.finger_count),
             )
             row = cur.fetchone()
 
